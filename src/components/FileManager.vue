@@ -1,10 +1,9 @@
 <template>
   <div class="main">
-    <!-- <FileNotification /> -->
     <div class="file-manager">
       <h2 class="title">File Manager</h2>
 
-      <button class="btn btn-danger">
+      <button class="btn btn-danger" @click='Logout'>
         <i class="fas fa-sign-out-alt"></i> Logout
       </button>
 
@@ -28,11 +27,12 @@
     </div>
 
     <!-- Folder Creation Section -->
-    <input type="text" v-model="newFolderName" placeholder="New Folder Name" class="folder-input" />
-    <button @click="createFolder" :disabled="!newFolderName" class="create-folder-button">
-      Create Folder
-    </button>
-
+    <div class="folder-create">
+      <input type="text" v-model="newFolderName" placeholder="New Folder Name" class="inputFiled" />
+      <button @click="createFolder" :disabled="!newFolderName" class="create-folder-button">
+        Create Folder
+      </button>
+    </div>
     <!-- Files and Folders Section -->
     <div v-if="folders.length > 0 || files.length > 0">
       <h2 class="title">File List</h2>
@@ -105,7 +105,6 @@
 import { updatePath } from '@/api/fileApi';
 import axios from 'axios';
 import { gsap } from 'gsap';
-import FileNotification from './FileNotification.vue';
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
 
@@ -117,7 +116,6 @@ export default {
       newFile: null,
       draggedFile: null,
       newFolderName: "",
-      FileNotification,
       sourceFolder: null,
     };
   },
@@ -530,11 +528,6 @@ body {
   width: 100%;
   padding: 12px;
   font-size: 18px;
-  /* background-color: #007bff; */
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
 .upload-button:hover {
@@ -676,5 +669,40 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.folder-create{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.create-folder-button, .upload-button{
+  text-wrap: nowrap;
+  padding: 10px;
+  background: linear-gradient(135deg, #3498db, #2c3e50);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.inputFiled {
+  border: 1px solid #dfe6e9;
+  height: 40px;
+  width: 70%;
+  border-radius: 25px;
+  padding-left: 35px;
+  font-size: 16px;
+  /* transition: border-color 0.3s; */
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.05);
+}
+
+.inputFiled:focus {
+  border-color: #3498db;
+  outline: none;
 }
 </style>
