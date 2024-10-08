@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     loginWithGoogle() {
-      window.location.href = 'http://localhost:5000/auth/google';
+      window.location.href = 'https://upload-files-backened.vercel.app/auth/google';
     },
     toggleForm() {
       this.isLogin = !this.isLogin;
@@ -101,7 +101,7 @@ export default {
       }
       try {
         const response = await axios.post(
-          "http://localhost:5000/auth/user/register",
+          "https://upload-files-backened.vercel.app/auth/user/register",
           {
             Name: this.name,
             email: this.email,
@@ -124,7 +124,7 @@ export default {
     },
     async loginUser() {
       try {
-        const response = await axios.post("http://localhost:5000/auth/user/login", {
+        const response = await axios.post("https://upload-files-backened.vercel.app/auth/user/login", {
           email: this.email,
           password: this.password,
         });
