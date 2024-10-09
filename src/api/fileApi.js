@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-    baseURL: "http://localhost:5000",
+    baseURL: "https://upload-files-backened.vercel.app",
     withCredentials: false,               // Allow cross-origin cookies for OAuth
   });
 
