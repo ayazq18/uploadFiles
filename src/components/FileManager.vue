@@ -125,7 +125,7 @@ export default {
       try {
         const mail = await this.getCookie('lznk');
 
-        const response = await axios.get('https://upload-files-backened.vercel.app/api/files/fetchAll', { params: { mail } });
+        const response = await axios.get('https://uploadfiles-backened.onrender.com/api/files/fetchAll', { params: { mail } });
         const data = response.data;
         this.files = [];
 
@@ -154,7 +154,7 @@ export default {
     async fetchFolders() {
       try {
         const mail = await this.getCookie("lznk")
-        const response = await axios.get('https://upload-files-backened.vercel.app/api/folders/fetchAll', { params: { mail } });
+        const response = await axios.get('https://uploadfiles-backened.onrender.com/api/folders/fetchAll', { params: { mail } });
         const data = response.data;
         this.folders = [];
 
@@ -192,7 +192,7 @@ export default {
         formData.append('file', this.newFile);
         formData.append('mail', mail);
 
-        await axios.post('https://upload-files-backened.vercel.app/api/files/upload', formData);
+        await axios.post('https://uploadfiles-backened.onrender.com/api/files/upload', formData);
         await this.fetchFiles();
         await this.fetchFolders();
         this.newFile = null
@@ -221,7 +221,7 @@ export default {
       if (fileToDelete) {
         try {
           // Send a request to delete the file on the server
-          await axios.delete(`https://upload-files-backened.vercel.app/api/files/${fileId}`);
+          await axios.delete(`https://uploadfiles-backened.onrender.com/api/files/${fileId}`);
 
           // Remove the file from the files list if it's there
           if (!foundInFolder) {
@@ -260,7 +260,7 @@ export default {
       }
       try {
         if (mail) {
-          const response = await axios.post('https://upload-files-backened.vercel.app/api/folders/create',
+          const response = await axios.post('https://uploadfiles-backened.onrender.com/api/folders/create',
             data);
 
           this.folders.push(response.data);
@@ -274,13 +274,13 @@ export default {
     },
 
     async deleteFolder(folderId) {
-      await axios.delete(`https://upload-files-backened.vercel.app/api/folders/${folderId}`);
+      await axios.delete(`https://uploadfiles-backened.onrender.com/api/folders/${folderId}`);
       await this.fetchFolders();
     },
 
     async downloadFolder(folder) {
       try {
-        const response = await axios.get(`https://upload-files-backened.vercel.app/api/folders/folder-zip/${folder.id}`, {
+        const response = await axios.get(`https://uploadfiles-backened.onrender.com/api/folders/folder-zip/${folder.id}`, {
           responseType: 'blob',
         });
         if (response && response.data) {
@@ -319,11 +319,9 @@ export default {
       try {
         if (this.draggedFile) {
           const mail = await this.getCookie("lznk")
-          console.log(this.draggedFile.id, this.sourceFolder.id)
           if (this.draggedFile.pathref == "file") {
             alert("We can't move file to self List");
           }
-          console.log(this.sourceFolder)
 
           await updatePath(
             this.draggedFile.id,
@@ -355,7 +353,6 @@ export default {
             );
 
             if (fileFolder) {
-              console.log("ifFilefolder")
               await updatePath(
                 this.draggedFile.id,
                 targetFolder.name,
@@ -365,7 +362,6 @@ export default {
                 mail
               );
             } else {
-              console.log("elseFilefolder", this.sourceFolder.id)
               await updatePath(
                 this.draggedFile.id,
                 targetFolder.name,
@@ -399,7 +395,7 @@ export default {
 
     async removeFileFromFolder(file) {
       try {
-        await axios.delete(`https://upload-files-backened.vercel.app/api/folders/file/${file.id}/${file.pathref}`);
+        await axios.delete(`https://uploadfiles-backened.onrender.com/api/folders/file/${file.id}/${file.pathref}`);
         this.fetchFolders()
       } catch (err) {
         console.error('Error removing file from folder:', err);
@@ -416,7 +412,7 @@ export default {
     },
     async getUserData() {
       try {
-        const response = await axios.get("https://upload-files-backened.vercel.app/auth/session", {
+        const response = await axios.get("https://uploadfiles-backened.onrender.com/auth/session", {
           withCredentials: true,
         });
         this.setCookie("lznk", response.data.user.email);
@@ -661,13 +657,14 @@ body {
   align-items: center;
 }
 
-.folder-create{
+.folder-create {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.create-folder-button, .upload-button{
+.create-folder-button,
+.upload-button {
   text-wrap: nowrap;
   padding: 10px;
   background: linear-gradient(135deg, #3498db, #2c3e50);

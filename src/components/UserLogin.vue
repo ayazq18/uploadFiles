@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     loginWithGoogle() {
-      window.location.href = 'https://upload-files-backened.vercel.app/auth/google';
+      window.location.href = 'https://uploadfiles-backened.onrender.com/auth/google';
     },
     toggleForm() {
       this.isLogin = !this.isLogin;
@@ -101,7 +101,7 @@ export default {
       }
       try {
         const response = await axios.post(
-          "https://upload-files-backened.vercel.app/auth/user/register",
+          "https://uploadfiles-backened.onrender.com/auth/user/register",
           {
             Name: this.name,
             email: this.email,
@@ -124,7 +124,7 @@ export default {
     },
     async loginUser() {
       try {
-        const response = await axios.post("https://upload-files-backened.vercel.app/auth/user/login", {
+        const response = await axios.post("https://uploadfiles-backened.onrender.com/auth/user/login", {
           email: this.email,
           password: this.password,
         });
