@@ -46,7 +46,15 @@ export default {
             this.percentage = "";
           }, 1000);
         }
-        console.log(data);
+      });
+      this.socket.on("delete-progress-file", (data) => {
+        this.message = "Folder Deleting"
+        this.percentage = data;
+        if (data == 100) {
+          setTimeout(() => {
+            this.percentage = "";
+          }, 1000);
+        }
       });
     },
 
