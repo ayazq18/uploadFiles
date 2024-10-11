@@ -56,6 +56,15 @@ export default {
           }, 1000);
         }
       });
+      this.socket.on("download-progress-file", (data) => {
+        this.message = "Folder Downloading"
+        this.percentage = data;
+        if (data == 100) {
+          setTimeout(() => {
+            this.percentage = "";
+          }, 1000);
+        }
+      });
     },
 
   },
