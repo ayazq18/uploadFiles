@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-    baseURL: "https://uploadfiles-backened.onrender.com",
+    baseURL: "http://localhost:5000",
     withCredentials: false,               // Allow cross-origin cookies for OAuth
   });
 

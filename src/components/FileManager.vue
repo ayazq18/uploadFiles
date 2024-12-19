@@ -117,15 +117,17 @@ export default {
       draggedFile: null,
       newFolderName: "",
       sourceFolder: null,
+      userData: null,
     };
   },
   methods: {
+
 
     async fetchFiles() {
       try {
         const mail = await this.getCookie('lznk');
 
-        const response = await axios.get('https://uploadfiles-backened.onrender.com/api/files/fetchAll', { params: { mail } });
+        const response = await axios.get('http://localhost:5000/api/files/fetchAll', { params: { mail } });
         const data = response.data;
         this.files = [];
 
@@ -154,7 +156,7 @@ export default {
     async fetchFolders() {
       try {
         const mail = await this.getCookie("lznk")
-        const response = await axios.get('https://uploadfiles-backened.onrender.com/api/folders/fetchAll', { params: { mail } });
+        const response = await axios.get('http://localhost:5000/api/folders/fetchAll', { params: { mail } });
         const data = response.data;
         this.folders = [];
 
@@ -192,7 +194,7 @@ export default {
         formData.append('file', this.newFile);
         formData.append('mail', mail);
 
-        await axios.post('https://uploadfiles-backened.onrender.com/api/files/upload', formData);
+        await axios.post('http://localhost:5000/api/files/upload', formData);
         await this.fetchFiles();
         await this.fetchFolders();
         this.newFile = null
@@ -204,45 +206,18 @@ export default {
 
     async deleteFile(fileId) {
       let fileToDelete = this.files.find(file => file.id === fileId);
-      let foundInFolder = false;  // Flag to check if the file is found in a folder
-
-      // If the file is not found in the file list, look for it in folders
-      if (!fileToDelete) {
-        for (const folder of this.folders) {
-          fileToDelete = folder.files.find(file => file.id === fileId);
-          if (fileToDelete) {
-            foundInFolder = true;  // Set the flag to indicate it's in a folder
-            break;  // Exit the loop once the file is found in a folder
-          }
-        }
-      }
 
       // If the file is found in either the file list or folders
       if (fileToDelete) {
         try {
-          // Send a request to delete the file on the server
-          await axios.delete(`https://uploadfiles-backened.onrender.com/api/files/${fileId}`);
+          await axios.delete(`http://localhost:5000/api/files/${fileId}`);
 
-          // Remove the file from the files list if it's there
-          if (!foundInFolder) {
-            this.files = this.files.filter(file => file.id !== fileId);
-          }
-
-          // If found in a folder, remove it from that folder
-          if (foundInFolder) {
-            this.folders.forEach(folder => {
-              folder.files = folder.files.filter(file => file.id !== fileId);
-            });
-          }
-
-          // Optionally, refresh the data
           this.fetchFiles();
           this.fetchFolders();
         } catch (error) {
           console.error("Error deleting file:", error);
         }
       } else {
-        // Only log the error if the file is truly not found in either list or folder
         console.error('File not found for deletion');
       }
     },
@@ -260,7 +235,7 @@ export default {
       }
       try {
         if (mail) {
-          const response = await axios.post('https://uploadfiles-backened.onrender.com/api/folders/create',
+          const response = await axios.post('http://localhost:5000/api/folders/create',
             data);
 
           this.folders.push(response.data);
@@ -274,13 +249,13 @@ export default {
     },
 
     async deleteFolder(folderId) {
-      await axios.delete(`https://uploadfiles-backened.onrender.com/api/folders/${folderId}`);
+      await axios.delete(`http://localhost:5000/api/folders/${folderId}`);
       await this.fetchFolders();
     },
 
     async downloadFolder(folder) {
       try {
-        const response = await axios.get(`https://uploadfiles-backened.onrender.com/api/folders/folder-zip/${folder.id}`, {
+        const response = await axios.get(`http://localhost:5000/api/folders/folder-zip/${folder.id}`, {
           responseType: 'blob',
         });
         if (response && response.data) {
@@ -395,7 +370,7 @@ export default {
 
     async removeFileFromFolder(file) {
       try {
-        await axios.delete(`https://uploadfiles-backened.onrender.com/api/folders/file/${file.id}/${file.pathref}`);
+        await axios.delete(`http://localhost:5000/api/folders/file/${file.id}/${file.pathref}`);
         this.fetchFolders()
       } catch (err) {
         console.error('Error removing file from folder:', err);
@@ -404,18 +379,36 @@ export default {
 
     async Logout() {
       try {
-        Cookies.remove("lznk");
-        this.checkAuth();
+        const response = await fetch("http://localhost:5000/auth/logout", {
+          method: "GET",
+          credentials: "include", 
+        });
+
+        if (response.ok) {
+          Cookies.remove("lznk");
+
+          this.checkAuth();
+        } else {
+          console.error("Failed to log out from server");
+        }
       } catch (error) {
-        console.error("Error deleting file:", error);
+        console.error("Error during logout:", error);
       }
     },
+
     async getUserData() {
       try {
-        const response = await axios.get("https://uploadfiles-backened.onrender.com/auth/session", {
+        const response = await axios.get("http://localhost:5000/auth/session", {
           withCredentials: true,
         });
+        console.log('---------->', response)
+
+        this.userData = response
         this.setCookie("lznk", response.data.user.email);
+        if (response.data.user.email) {
+          this.fetchFiles();
+          this.fetchFolders();
+        }
       } catch (error) {
         console.error("Error deleting file:", error);
       }

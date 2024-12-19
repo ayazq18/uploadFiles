@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100vh; width: 100vw; display: flex; align-items: center; justify-content: center;">
+  <div style="height: 100vh; display: flex; align-items: center; justify-content: center;">
     <div class="loginContainer">
       <div class="form-wrapper" :class="{ 'shift-left': !isLogin }">
         <!-- Login Form -->
@@ -51,8 +51,12 @@
 
       <!-- Toggle Link -->
       <div class="toggle-link">
-        <button v-if="!isLogin" @click="loginWithGoogle" class="submit-button google-button">Register with
-          Google</button>
+        <button v-if="!isLogin" @click="loginWithGoogle" class="submit-button google-button">Login with
+          Google
+        </button>
+        <button v-if="!isLogin" @click="loginWithFacebook" class="submit-button google-button">Login with
+          Facebook
+        </button>
         <p>
           {{ isLogin ? "Don't have an account?" : "Already have an account?" }}
           <a href="#" @click.prevent="toggleForm">
@@ -81,7 +85,10 @@ export default {
   },
   methods: {
     loginWithGoogle() {
-      window.location.href = 'https://uploadfiles-backened.onrender.com/auth/google';
+      window.location.href = 'http://localhost:5000/auth/google';
+    },
+    loginWithFacebook() {
+      window.location.href = 'http://localhost:5000/auth/facebook';
     },
     toggleForm() {
       this.isLogin = !this.isLogin;
@@ -101,7 +108,7 @@ export default {
       }
       try {
         const response = await axios.post(
-          "https://uploadfiles-backened.onrender.com/auth/user/register",
+          "http://localhost:5000/auth/user/register",
           {
             Name: this.name,
             email: this.email,
@@ -124,7 +131,7 @@ export default {
     },
     async loginUser() {
       try {
-        const response = await axios.post("https://uploadfiles-backened.onrender.com/auth/user/login", {
+        const response = await axios.post("http://localhost:5000/auth/user/login", {
           email: this.email,
           password: this.password,
         });

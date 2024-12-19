@@ -40,7 +40,7 @@ export default {
     methods: {
         
         async createFolder() {
-            const response = await axios.post('https://uploadfiles-backened.onrender.com/api/folders/create', {
+            const response = await axios.post('http://localhost:5000/api/folders/create', {
                 name: this.folderName,
                 parentFolderId: this.selectedFolder // optional for subfolders
             });
@@ -49,16 +49,16 @@ export default {
         },
 
         async fetchFolders() {
-            const response = await axios.get('https://uploadfiles-backened.onrender.com/api/folders/fetchAll'); 
+            const response = await axios.get('http://localhost:5000/api/folders/fetchAll'); 
             this.folders = response.data;
         },
         async deleteFolder(folderId) {
-            await axios.delete(`https://uploadfiles-backened.onrender.com/api/folders/${folderId}`);
+            await axios.delete(`http://localhost:5000/api/folders/${folderId}`);
             this.fetchFolders();
         },
         async downloadFolder(folderId) {
             try {
-                const response = await axios.get(`https://uploadfiles-backened.onrender.com/api/folders/download/${folderId}`);
+                const response = await axios.get(`http://localhost:5000/api/folders/download/${folderId}`);
                 window.location.href = response.data.url;
             } catch (err) {
                 console.error('Error downloading folder:', err);
